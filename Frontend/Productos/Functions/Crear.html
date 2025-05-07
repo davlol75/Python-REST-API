@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../libs/style.css">
+    <link href="../../libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <title>Consumir API de Productos</title>
+</head>
+<body>
+    <div class="wrapper">
+        <h2>Crear Nuevo Producto</h2>
+        <form id="crear-producto-form">
+            <div class="input-box">
+                <label for="nombre">Nombre:</label>
+                <input type="text" class="form-control" id="nombre" required>
+            </div>
+            <div class="input-box">
+                <label for="email">precio:</label>
+                <input type="text" class="form-control" id="precio" required>
+            </div>
+            <button type="submit" class="btn btn2">Crear Producto</button>
+            <a href="../AdministrarProducto.html" class="btn">Volver</a>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            document.getElementById('crear-producto-form').addEventListener('submit', function(event){
+                event.preventDefault();
+                const nombre = document.getElementById('nombre').value;
+                const precio = document.getElementById('precio').value;
+                fetch(`http://127.0.0.1:5000/nuevo_producto`,{
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify({nombre: nombre, precio: precio})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.mensaje);
+                    window.location.href = `../AdministrarProducto.html`;
+                })
+                .catch(error => console.error('Error: ', error));
+            });
+        });
+    </script>
+</body>
+</html>

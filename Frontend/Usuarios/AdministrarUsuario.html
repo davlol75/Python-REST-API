@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../libs/style.css">
+    <link href="../libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <title>Consumir API de Usuarios</title>
+</head>
+<body>
+    <div class="table">
+        <h1>Listado de Usuarios</h1>
+        <hr>
+        <table id="usuarios-table" class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Contraseña</th>
+                    <th colspan="">Opcion Actualizar</th>
+                    <th colspan="">Opcion Eliminar</th>
+                </tr>
+            </thead>
+            <tbody id="usuarios-body">
+            </tbody>
+        </table>
+        <div class="button-table">
+            <a href="Functions/Crear.html" class="btn btn2">Crear Nuevo Usuario</a>
+            <a href="../index.html" class="btn btn">Volver</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            function cargarUsuarios(){
+                fetch(`http://127.0.0.1:5000/usuarios`)
+                .then(response => response.json())
+                .then(data => {
+                    const usuariosBody = document.getElementById('usuarios-body')
+                    usuariosBody.innerHTML = "";
+                    data.forEach(usuario => {
+                        const tr = document.createElement ("tr")
+                        tr.innerHTML = `
+                            <td>${usuario[0]}</td>
+                            <td>${usuario[1]}</td>
+                            <td>${usuario[2]}</td>
+                            <td>${usuario[3]}</td>
+                            <td><button class="btn btn-primary" onclick="actualizarUsuario(${usuario[0]})">Actualizar</button></td>
+                            <td><button class="btn btn-danger" onclick="eliminarUsuario(${usuario[0]})">Eliminar</button></td>
+                        `;
+                        usuariosBody.appendChild(tr);
+                    });
+                })
+                .catch(error => console.error('Error: ', error));
+            }
+            cargarUsuarios();
+        });
+
+        function eliminarUsuario(id){
+            fetch(`http://127.0.0.1:5000/eliminar_usuario/${id}`,{
+                method:'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.mensaje);
+                window.location.href= 'AdministrarUsuario.html';
+            })
+            .catch(error => console.error('Error: ', error));
+        }
+
+        function actualizarUsuario(id){
+            window.location.href= `Functions/Actualizar.html?id=${id}`;
+        }
+    </script>
+</body>
+</html>

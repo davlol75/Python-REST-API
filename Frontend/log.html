@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="libs/style.css">
+    <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <title>Login</title>
+</head>
+<body>
+    <div class="wrapper">
+        <form class="form control" method="post" id="login">
+            <h1>Login</h1>
+            <div class="input-box">
+                <input type="text"placeholder="Correo Electronico" id="email" name="email" required>
+            </div>
+            <div class="input-box">
+                <input type="password"placeholder="Contraseña" id="contrasena" name="contrasena" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            document.getElementById('login').addEventListener('submit', function(event){
+                event.preventDefault();
+                const email = document.getElementById('email').value;
+                const contrasena = document.getElementById('contrasena').value;
+                fetch('http://127.0.0.1:5000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: email, contrasena: contrasena })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.mensaje === "index") {
+                        window.location.href = 'index.html';
+                    } else {
+                        alert(data.mensaje);
+                        window.location.href = 'log.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
